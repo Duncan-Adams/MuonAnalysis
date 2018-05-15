@@ -170,6 +170,19 @@ void TheoryMiniTuplizer::analyze(const edm::Event& iEvent, const edm::EventSetup
         //~ Ht += jet.pt();
     //~ }
 
+    for (auto &jet: *jets) {
+        double type = m_theoryID_jet;
+        double btag = 0.0;
+		double dumb = 0.0;
+
+        TLorentzVector tmp_vector;
+        tmp_vector.SetPtEtaPhiM(jet.pt(), jet.eta(), jet.phi(), jet.m());
+
+        addObject(tmp_vector, type, btag, jet.csv(), dumb, dumb, dumb, dumb, dumb, dumb, dumb);
+        Ht += jet.pt();
+    }		
+	
+    
     for (auto &muon: *muons) {
         double type = -m_theoryID_muon*muon.charge();
         double btag = -999.0;
