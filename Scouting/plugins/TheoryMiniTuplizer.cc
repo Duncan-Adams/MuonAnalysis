@@ -120,7 +120,92 @@ TheoryMiniTuplizer::~TheoryMiniTuplizer() {
 // ------------ method called for each event  ------------
 void TheoryMiniTuplizer::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup) {
    using namespace edm;
+   int getCollectionsResult = GetCollections(iEvent);
+    if (getCollectionsResult)
+	return;
 
+    double Ht = 0.0;
+    double Lt = 0.0;
+    double St = 0.0;
+
+    addEvtNum(iEvent.id().run(), iEvent.id().event(),
+              iEvent.id().luminosityBlock());
+
+    addMET(m_theoryID_pfmet, *MET_pt, *MET_phi);
+    St += *MET_pt;
+    
+    double rho = *handle_rho;
+
+    //~ for (auto &jet: *jets) {
+		
+		//~ double jet_e = jet.photonEnergy() + jet.chargedHadronEnergy() + jet.neutralHadronEnergy() + jet.electronEnergy() + jet.muonEnergy();
+
+		//~ double NHF = jet.neutralHadronEnergy()/jet_e;
+		//~ double NEMF = jet.photonEnergy()/jet_e;
+		//~ double CHF = jet.chargedHadronEnergy()/jet_e;
+		//~ double CEMF = jet.electronEnergy()/jet_e;
+		//~ int CM = jet.chargedHadronMultiplicity() + jet.electronMultiplicity() + jet.muonMultiplicity();
+		//~ int NM = jet.neutralHadronMultiplicity() + jet.photonMultiplicity();
+		//~ int NC = CM + NM;
+
+		//~ bool looseJetID = false;
+
+		//~ if (fabs(jet.eta()) <= 2.7) {
+			//~ looseJetID = (NHF<0.99 && NEMF<0.99 && NC>1) && ((abs(jet.eta())<=2.4 && CHF>0 && CM>0 && CEMF<0.99) || fabs(jet.eta())>2.4);
+		//~ }
+		//~ else if (fabs(jet.eta()) > 2.7 && fabs(jet.eta()) <= 3.0) {
+			//~ looseJetID = (NHF<0.98 && NEMF>0.01 && NM>2);
+		//~ }
+
+		//~ if (!looseJetID) continue; //throwing away bad jets
+	
+        //~ double type = m_theoryID_jet;
+        //~ double btag = 0.0;
+		//~ double dumb = 0.0;
+
+        //~ TLorentzVector tmp_vector;
+        //~ tmp_vector.SetPtEtaPhiM(jet.pt(), jet.eta(), jet.phi(), jet.m());
+
+        //~ addObject(tmp_vector, type, btag, jet.csv(), dumb, dumb, dumb, dumb, dumb, dumb, dumb);
+        //~ Ht += jet.pt();
+    //~ }
+
+    for (auto &muon: *muons) {
+        double type = -m_theoryID_muon*muon.charge();
+        double btag = -999.0;
+
+        TLorentzVector tmp_vector;
+        tmp_vector.SetPtEtaPhiM(muon.pt(), muon.eta(), muon.phi(), muon.m());
+
+        addObject(tmp_vector, type, btag);
+        Lt += muon.pt();
+    }
+
+    St = Ht + Lt;
+    addScalar(m_theoryID_ht, Ht);
+    addScalar(m_theoryID_lt, Lt);
+    addScalar(m_theoryID_st, St);
+
+    tree->Fill();
+
+    nobject = 0;
+
+    m_object_type->clear();
+    m_object_btag->clear();
+    m_object_dum1->clear();
+    m_object_dum2->clear();
+    m_object_dum3->clear();
+    m_object_dum4->clear();
+    m_object_dum5->clear();
+    m_object_dum6->clear();
+    m_object_dum7->clear();
+    m_object_dum8->clear();
+    m_object_scalar->clear();
+    m_evtnum->clear();
+
+    m_object->Clear();
+
+    return;
    
 }
 
@@ -147,35 +232,44 @@ int TheoryMiniTuplizer::GetCollections(const edm::Event& iEvent) {
     // Returns nonzero if there is a problem getting a collection
 
     // Get jets
-    //~ iEvent.getByToken(token_jets, jets);
-    //~ if (!jets.isValid()) {
-        //~ throw edm::Exception(edm::errors::ProductNotFound)
-            //~ << "Could not find ScoutingPFJetCollection." << endl;
-        //~ return 1;
-    //~ }
+    iEvent.getByToken(token_jets, jets);
+    if (!jets.isValid()) {
+        throw edm::Exception(edm::errors::ProductNotFound)
+            << "Could not find ScoutingCaloJetCollection." << endl;
+        return 1;
+    }
     
-        //~ // Get rho
-    //~ iEvent.getByToken(token_rho, handle_rho);
-    //~ if (!handle_rho.isValid()) {
-        //~ throw edm::Exception(edm::errors::ProductNotFound)
-            //~ << "Could not find rho." << endl;
-        //~ return 1;
-    //~ }
+    // Get rho
+    iEvent.getByToken(token_rho, handle_rho);
+    if (!handle_rho.isValid()) {
+        throw edm::Exception(edm::errors::ProductNotFound)
+            << "Could not find rho." << endl;
+        return 1;
+    }
 
-    //~ // Get MET
-    //~ iEvent.getByToken(token_MET_pt, MET_pt);
-    //~ if (!MET_pt.isValid()) {
-        //~ throw edm::Exception(edm::errors::ProductNotFound)
-            //~ << "Could not find MET pt." << endl;
-        //~ return 1;
-    //~ }
+    // Get MET
+    iEvent.getByToken(token_MET_pt, MET_pt);
+    if (!MET_pt.isValid()) {
+        throw edm::Exception(edm::errors::ProductNotFound)
+            << "Could not find MET pt." << endl;
+        return 1;
+    }
 
-    //~ iEvent.getByToken(token_MET_phi, MET_phi);
-    //~ if (!MET_phi.isValid()) {
-        //~ throw edm::Exception(edm::errors::ProductNotFound)
-            //~ << "Could not find MET phi." << endl;
-        //~ return 1;
-    //~ }
+    iEvent.getByToken(token_MET_phi, MET_phi);
+    if (!MET_phi.isValid()) {
+        throw edm::Exception(edm::errors::ProductNotFound)
+            << "Could not find MET phi." << endl;
+        return 1;
+    }
+
+    // Get muons
+    iEvent.getByToken(token_muons, muons);
+    if (!muons.isValid()) {
+        throw edm::Exception(edm::errors::ProductNotFound)
+            << "Could not find ScoutingMuonCollection." << endl;
+        return 1;
+    }
+
 
 	return 0;
 }
