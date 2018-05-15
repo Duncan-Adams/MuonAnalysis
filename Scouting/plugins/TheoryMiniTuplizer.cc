@@ -178,7 +178,7 @@ void TheoryMiniTuplizer::analyze(const edm::Event& iEvent, const edm::EventSetup
         TLorentzVector tmp_vector;
         tmp_vector.SetPtEtaPhiM(jet.pt(), jet.eta(), jet.phi(), jet.m());
 
-        addObject(tmp_vector, type, btag, jet.csv(), dumb, dumb, dumb, dumb, dumb, dumb, dumb);
+        addObject(tmp_vector, type, btag, dumb, dumb, dumb, dumb, dumb, dumb, dumb, dumb);
         Ht += jet.pt();
     }		
 	
