@@ -1,6 +1,6 @@
 import FWCore.ParameterSet.Config as cms
 
-theoryminituplzier = cms.EDAnalyzer(
+theoryminituplizer = cms.EDAnalyzer(
    'TheoryMiniTuplizer',
    jet_collection      = cms.InputTag('hltScoutingCaloPacker'),
    rho                 = cms.InputTag('hltScoutingCaloPacker:rho'),

@@ -33,7 +33,7 @@ process.source = cms.Source("PoolSource",
 process.load('MuonAnalysis.Scouting.theoryminituplizer_cfi')
 
 
-process.theoryminituplzier.output_file_name = cms.string(options.outputFile)
+process.theoryminituplizer.output_file_name = cms.string(options.outputFile)
 
 
-process.p = cms.Path(process.theoryminituplzier)
+process.p = cms.Path(process.theoryminituplizer)

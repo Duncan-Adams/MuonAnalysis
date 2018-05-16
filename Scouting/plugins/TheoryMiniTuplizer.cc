@@ -35,7 +35,7 @@ TheoryMiniTuplizer::TheoryMiniTuplizer(const edm::ParameterSet& iConfig):
 {
    //now do what ever initialization is needed
    file = new TFile(file_name.c_str(), "RECREATE");
-   tree = new TTree("tree", "Tree for scouting data");
+   tree = new TTree("theoryminituplizer", "Tree for scouting data");
    
    // Initialize the ID Codes for the theory Ntuple
    m_theoryID_muon = 2.0;
@@ -134,7 +134,7 @@ void TheoryMiniTuplizer::analyze(const edm::Event& iEvent, const edm::EventSetup
     addMET(m_theoryID_pfmet, *MET_pt, *MET_phi);
     St += *MET_pt;
     
-    double rho = *handle_rho;
+//~    double rho = *handle_rho;
 
     //~ for (auto &jet: *jets) {
 		
@@ -371,9 +371,6 @@ void TheoryMiniTuplizer::addScalar(double type, double value) {
 
     return;
 }
-
-
-
 
 //define this as a plug-in
 DEFINE_FWK_MODULE(TheoryMiniTuplizer);
