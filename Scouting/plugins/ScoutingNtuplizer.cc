@@ -49,6 +49,7 @@ ScoutingNtuplizer::ScoutingNtuplizer(const edm::ParameterSet& iConfig):
    tree->Branch("jet_pt",  &jet_pt);
    tree->Branch("jet_eta", &jet_eta);
    tree->Branch("jet_phi", &jet_phi);
+   tree->Branch("jet_m", &jet_m);
     
    tree->Branch("muon_num", &muon_num, "muon_num/I");
    tree->Branch("muon_pt",  &muon_pt);
@@ -92,22 +93,25 @@ void ScoutingNtuplizer::analyze(const edm::Event& iEvent, const edm::EventSetup&
     
     //Jets
     for (auto &j: *jets) {
-		jet_pt.push_back(j.pt());
-		jet_eta.push_back(j.eta());
-		jet_phi.push_back(j.phi());
-		jet_m.push_back(j.m());
+		if(fabs(j.eta()) <= 2.4) {
+			jet_pt.push_back(j.pt());
+			jet_eta.push_back(j.eta());
+			jet_phi.push_back(j.phi());
+			jet_m.push_back(j.m());		
+			jet_num += 1;
+	    }
 	}
 	
-	jet_num = jets->size();
     
     //Muons
     for (auto &m: *muons) {
-       muon_pt.push_back(m.pt());
-       muon_eta.push_back(m.eta()); 
-       muon_phi.push_back(m.phi()); 
+	    if(m.isGlobalMuon()) {
+	        muon_pt.push_back(m.pt());
+	        muon_eta.push_back(m.eta()); 
+	        muon_phi.push_back(m.phi()); 
+	        muon_num += 1;
+	    }
 	}
-
-    muon_num = muons->size();
     
     //MET
     MET_pt = *handle_MET_pt;
