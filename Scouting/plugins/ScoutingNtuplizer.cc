@@ -44,13 +44,18 @@ ScoutingNtuplizer::ScoutingNtuplizer(const edm::ParameterSet& iConfig):
    tree->Branch("Run", &run, "Run/I");
    tree->Branch("Lumi", &lumi, "Lumi/I");
    tree->Branch("Event", &event, "Event/I");
+   
+   tree->Branch("jet_num", &jet_num, "jet_num/I");
+   tree->Branch("jet_pt",  &jet_pt);
+   tree->Branch("jet_eta", &jet_eta);
+   tree->Branch("jet_phi", &jet_phi);
     
    tree->Branch("muon_num", &muon_num, "muon_num/I");
-   tree->Branch("muon_pt", &muon_pt);
+   tree->Branch("muon_pt",  &muon_pt);
    tree->Branch("muon_eta", &muon_eta);
    tree->Branch("muon_phi", &muon_phi);
    
-   tree->Branch("MET_pt", &MET_pt);
+   tree->Branch("MET_pt",  &MET_pt);
    tree->Branch("MET_phi", &MET_phi);
 
 
@@ -84,6 +89,16 @@ void ScoutingNtuplizer::analyze(const edm::Event& iEvent, const edm::EventSetup&
     run = iEvent.id().run();
     lumi = iEvent.id().luminosityBlock();
     event = iEvent.id().event();
+    
+    //Jets
+    for (auto &j: *jets) {
+		jet_pt.push_back(j.pt());
+		jet_eta.push_back(j.eta());
+		jet_phi.push_back(j.phi());
+		jet_m.push_back(j.m());
+	}
+	
+	jet_num = jets->size();
     
     //Muons
     for (auto &m: *muons) {
@@ -125,6 +140,15 @@ ScoutingNtuplizer::fillDescriptions(edm::ConfigurationDescriptions& descriptions
 }
 
 int ScoutingNtuplizer::GetCollections(const edm::Event& iEvent) {
+    // Get jets
+    iEvent.getByToken(token_jets, jets);
+    if (!jets.isValid()) {
+        throw edm::Exception(edm::errors::ProductNotFound)
+	    << "Could not find ScoutingCaloJetCollection." << endl;
+	return 1;
+    }
+   
+   
     // Get rho
     iEvent.getByToken(token_rho, handle_rho);
     if (!handle_rho.isValid()) {
@@ -170,11 +194,20 @@ int ScoutingNtuplizer::GetCollections(const edm::Event& iEvent) {
 }
 
 void ScoutingNtuplizer::ResetVariables() {
-     
+    
+    jet_num = 0;
+    jet_pt.clear();
+    jet_eta.clear();
+    jet_phi.clear();
+    jet_m.clear();
+    
     rho = 0.0;
     run = 0;
     lumi = 0;
     event = 0;
+    
+    MET_phi = 0;
+    MET_pt = 0;
     
     muon_num = 0;
     muon_pt.clear();

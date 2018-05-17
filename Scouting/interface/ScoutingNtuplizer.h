@@ -46,45 +46,13 @@ class ScoutingNtuplizer : public edm::EDAnalyzer {
       
       edm::Handle<ScoutingCaloJetCollection> jets;
 
-
-      float Ht;
-      float Ht_20;
-      float Ht_raw;
-      float HtJEC;
-      int event_num_;
-
       int jet_num;
-      int jet_num_20;
-      int jet_num_raw;
-
       std::vector<float> jet_pt;
       std::vector<float> jet_eta;
       std::vector<float> jet_phi;
       std::vector<float> jet_m;
-      std::vector<float> jet_energy_correction;
-      std::vector<float> jet_csv;
-      std::vector<float> jet_ID;
 
-      std::vector<float> jet_energy;
-      std::vector<float> jet_HF;
-      std::vector<float> jet_EMF;
-
-
-    // raw
-
-      std::vector<float> jet_pt_raw;
-      std::vector<float> jet_eta_raw;
-      std::vector<float> jet_phi_raw;
-      std::vector<float> jet_m_raw;
-      std::vector<float> jet_energy_correction_raw;
-      std::vector<float> jet_csv_raw;
-      std::vector<float> jet_ID_raw;
-
-      std::vector<float> jet_energy_raw;
-      std::vector<float> jet_HF_raw;
-      std::vector<float> jet_EMF_raw;
-    
-      int vertex_num;
+  
     
     // Muon Data    
       edm::EDGetTokenT<ScoutingMuonCollection> token_muons;
@@ -107,7 +75,8 @@ class ScoutingNtuplizer : public edm::EDAnalyzer {
       edm::EDGetTokenT<ScoutingVertexCollection> token_vertices;
     
       edm::Handle<ScoutingVertexCollection> vertices;
-   
+
+      int vertex_num;   
       float rho;
       float MET_pt;
       float MET_phi;

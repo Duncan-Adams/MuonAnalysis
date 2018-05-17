@@ -8,3 +8,8 @@ __init__.py
 *.o
 *.root
 *.log
+
+*.png
+*.jpg
+*.gif
+
