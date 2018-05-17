@@ -37,6 +37,8 @@ class ScoutingNtuplizer : public edm::EDAnalyzer {
       virtual void analyze(const edm::Event&, const edm::EventSetup&) override;
       virtual void endJob() override;
       virtual int GetCollections(const edm::Event&);
+      
+      void ResetVariables();
 
     // ----------member data ---------------------------
       
@@ -101,10 +103,13 @@ class ScoutingNtuplizer : public edm::EDAnalyzer {
       edm::Handle<double> handle_rho;
       edm::Handle<double> handle_MET_pt;
       edm::Handle<double> handle_MET_phi;
-   
+      
+      edm::EDGetTokenT<ScoutingVertexCollection> token_vertices;
+    
+      edm::Handle<ScoutingVertexCollection> vertices;
    
       float rho;
-      float MET;
+      float MET_pt;
       float MET_phi;
       
       int run;

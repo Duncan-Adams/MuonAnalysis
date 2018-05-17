@@ -31,6 +31,8 @@ ScoutingNtuplizer::ScoutingNtuplizer(const edm::ParameterSet& iConfig):
                   iConfig.getParameter<InputTag>("rho"))),
     token_MET_pt(consumes<double>(iConfig.getParameter<InputTag>("MET_pt"))),
     token_MET_phi(consumes<double>(iConfig.getParameter<InputTag>("MET_phi"))),
+    token_vertices(consumes<ScoutingVertexCollection>(
+                       iConfig.getParameter<InputTag>("vertex_collection"))),
     file_name(iConfig.getParameter<string>("output_file_name"))
 
 {
@@ -38,7 +40,7 @@ ScoutingNtuplizer::ScoutingNtuplizer(const edm::ParameterSet& iConfig):
    file = new TFile(file_name.c_str(), "RECREATE");
    tree = new TTree("scoutingntuplizer", "Tree for scouting data");
 
-   //~ tree->Branch("rho", &rho, "rho/F");
+   tree->Branch("rho", &rho, "rho/F");
    tree->Branch("Run", &run, "Run/I");
    tree->Branch("Lumi", &lumi, "Lumi/I");
    tree->Branch("Event", &event, "Event/I");
@@ -47,6 +49,9 @@ ScoutingNtuplizer::ScoutingNtuplizer(const edm::ParameterSet& iConfig):
    tree->Branch("muon_pt", &muon_pt);
    tree->Branch("muon_eta", &muon_eta);
    tree->Branch("muon_phi", &muon_phi);
+   
+   tree->Branch("MET_pt", &MET_pt);
+   tree->Branch("MET_phi", &MET_phi);
 
 
 }
@@ -72,11 +77,15 @@ void ScoutingNtuplizer::analyze(const edm::Event& iEvent, const edm::EventSetup&
    int getCollectionsResult = GetCollections(iEvent);
     if (getCollectionsResult)
 	return;
-    static int count = 0;   
-    //~ rho = *handle_rho;
+    
+	ResetVariables();
+	
+    rho = *handle_rho;
     run = iEvent.id().run();
     lumi = iEvent.id().luminosityBlock();
     event = iEvent.id().event();
+    
+    //Muons
     for (auto &m: *muons) {
        muon_pt.push_back(m.pt());
        muon_eta.push_back(m.eta()); 
@@ -84,19 +93,15 @@ void ScoutingNtuplizer::analyze(const edm::Event& iEvent, const edm::EventSetup&
 	}
 
     muon_num = muons->size();
-    count += 1;
-    tree->Fill();
-   //For now just store muon stuff, add more as TODO
-     
-    //~ rho = 0.0;
-    run = 0;
-    lumi = 0;
-    event = 0;
     
-    muon_num = 0;
-    muon_pt.clear();
-    muon_eta.clear();
-    muon_phi.clear();
+    //MET
+    MET_pt = *handle_MET_pt;
+    MET_phi = *handle_MET_phi;
+    
+    //Vertices
+    
+    
+    tree->Fill();
 }
 
 
@@ -121,12 +126,12 @@ ScoutingNtuplizer::fillDescriptions(edm::ConfigurationDescriptions& descriptions
 
 int ScoutingNtuplizer::GetCollections(const edm::Event& iEvent) {
     // Get rho
-    //~ iEvent.getByToken(token_rho, handle_rho);
-    //~ if (!handle_rho.isValid()) {
-        //~ throw edm::Exception(edm::errors::ProductNotFound)
-            //~ << "Could not find rho." << endl;
-        //~ return 1;
-    //~ }	
+    iEvent.getByToken(token_rho, handle_rho);
+    if (!handle_rho.isValid()) {
+        throw edm::Exception(edm::errors::ProductNotFound)
+            << "Could not find rho." << endl;
+        return 1;
+    }	
 	
 	// Get muons
     iEvent.getByToken(token_muons, muons);
@@ -135,8 +140,47 @@ int ScoutingNtuplizer::GetCollections(const edm::Event& iEvent) {
             << "Could not find ScoutingMuonCollection." << endl;
         return 1;
     }
+    
+    // Get MET
+    iEvent.getByToken(token_MET_pt, handle_MET_pt);
+    if (!handle_MET_pt.isValid()) {
+        throw edm::Exception(edm::errors::ProductNotFound)
+	    << "Could not find MET." << endl;
+	return 1;
+    }
+
+    iEvent.getByToken(token_MET_phi, handle_MET_phi);
+    if (!handle_MET_phi.isValid()) {
+        throw edm::Exception(edm::errors::ProductNotFound)
+	    << "Could not find MET_phi." << endl;
+	return 1;
+    }
+   
+    // Get Vertices
+    iEvent.getByToken(token_vertices, vertices);
+    if (!vertices.isValid()) {
+        throw edm::Exception(edm::errors::ProductNotFound)
+	    << "Could not find ScoutingVertexCollection." << endl;
+	return 1;
+    }
+    
+   
 	
 	return 0;
+}
+
+void ScoutingNtuplizer::ResetVariables() {
+     
+    rho = 0.0;
+    run = 0;
+    lumi = 0;
+    event = 0;
+    
+    muon_num = 0;
+    muon_pt.clear();
+    muon_eta.clear();
+    muon_phi.clear();
+	
 }
 
 //define this as a plug-in
