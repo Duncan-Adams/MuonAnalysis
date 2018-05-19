@@ -45,6 +45,8 @@ ScoutingNtuplizer::ScoutingNtuplizer(const edm::ParameterSet& iConfig):
    tree->Branch("Lumi", &lumi, "Lumi/I");
    tree->Branch("Event", &event, "Event/I");
    
+   tree->Branch("HT", &HT);
+   
    tree->Branch("jet_num", &jet_num, "jet_num/I");
    tree->Branch("jet_pt",  &jet_pt);
    tree->Branch("jet_eta", &jet_eta);
@@ -55,6 +57,8 @@ ScoutingNtuplizer::ScoutingNtuplizer(const edm::ParameterSet& iConfig):
    tree->Branch("muon_eta", &muon_eta);
    tree->Branch("muon_phi", &muon_phi);
    
+   tree->Branch("vertex_num", &vertex_num, "vertex_num/I");
+   
    tree->Branch("MET_pt",  &MET_pt);
    tree->Branch("MET_phi", &MET_phi);
 
@@ -64,7 +68,7 @@ ScoutingNtuplizer::ScoutingNtuplizer(const edm::ParameterSet& iConfig):
 
 ScoutingNtuplizer::~ScoutingNtuplizer() {
  
-   // do anything here that needs to be done at desctruction time
+   // do anything here that needs to be done at destruction time
    // (e.g. close files, deallocate resources etc.)
     file->cd();
     tree->Write();
@@ -91,15 +95,18 @@ void ScoutingNtuplizer::analyze(const edm::Event& iEvent, const edm::EventSetup&
     event = iEvent.id().event();
     
     //Jets
+
     for (auto &j: *jets) {
 		jet_pt.push_back(j.pt());
 		jet_eta.push_back(j.eta());
 		jet_phi.push_back(j.phi());
 		jet_m.push_back(j.m());
+		
+		HT += j.pt();
+		jet_num += 1;
 	}
-	
-	jet_num = jets->size();
-    
+
+
     //Muons
     for (auto &m: *muons) {
        muon_pt.push_back(m.pt());
@@ -114,7 +121,7 @@ void ScoutingNtuplizer::analyze(const edm::Event& iEvent, const edm::EventSetup&
     MET_phi = *handle_MET_phi;
     
     //Vertices
-    
+    vertex_num = vertices->size();
     
     tree->Fill();
 }
@@ -194,25 +201,33 @@ int ScoutingNtuplizer::GetCollections(const edm::Event& iEvent) {
 }
 
 void ScoutingNtuplizer::ResetVariables() {
+    rho = 0.0;
+    run = 0;
+    lumi = 0;
+    event = 0;
     
+    // Reset Jets
     jet_num = 0;
     jet_pt.clear();
     jet_eta.clear();
     jet_phi.clear();
     jet_m.clear();
     
-    rho = 0.0;
-    run = 0;
-    lumi = 0;
-    event = 0;
+    HT = 0;
     
-    MET_phi = 0;
-    MET_pt = 0;
-    
+    // Reset Muons
     muon_num = 0;
     muon_pt.clear();
     muon_eta.clear();
     muon_phi.clear();
+    
+    // Reset MET
+    MET_phi = 0;
+    MET_pt = 0;
+    
+    // Reset Vertices
+    vertex_num = 0;
+
 	
 }
 
