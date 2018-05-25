@@ -61,9 +61,12 @@ class ScoutingNtuplizer : public edm::EDAnalyzer {
       edm::Handle<ScoutingMuonCollection> muons;
   
       int muon_num;
+      std::vector<int> muon_q;
       std::vector<float> muon_pt;
       std::vector<float> muon_eta;
       std::vector<float> muon_phi;
+      
+
 
     // Event Data
       edm::EDGetTokenT<double> token_rho;
@@ -75,10 +78,19 @@ class ScoutingNtuplizer : public edm::EDAnalyzer {
       edm::Handle<double> handle_MET_phi;
       
       edm::EDGetTokenT<ScoutingVertexCollection> token_vertices;
-    
       edm::Handle<ScoutingVertexCollection> vertices;
 
       int vertex_num;   
+      
+      std::vector<float> vtx_x;
+      std::vector<float> vtx_y;
+      std::vector<float> vtx_z;
+      
+      std::vector<float> vtx_ex;
+      std::vector<float> vtx_ey;
+      std::vector<float> vtx_ez;
+      
+      
       float rho;
       float MET_pt;
       float MET_phi;
@@ -91,5 +103,7 @@ class ScoutingNtuplizer : public edm::EDAnalyzer {
       TFile *file;
       TTree *tree;
       
-    // TODO Jec's and trigger information
+      int i = 0;
+      
+    // TODO trigger information
 };

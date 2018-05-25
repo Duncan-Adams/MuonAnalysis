@@ -53,12 +53,20 @@ ScoutingNtuplizer::ScoutingNtuplizer(const edm::ParameterSet& iConfig):
    tree->Branch("jet_phi", &jet_phi);
     
    tree->Branch("muon_num", &muon_num, "muon_num/I");
+   tree->Branch("muon_q", &muon_q);
    tree->Branch("muon_pt",  &muon_pt);
    tree->Branch("muon_eta", &muon_eta);
    tree->Branch("muon_phi", &muon_phi);
    
    tree->Branch("vertex_num", &vertex_num, "vertex_num/I");
+   tree->Branch("vertex_x", &vtx_x);
+   tree->Branch("vertex_y", &vtx_y);
+   tree->Branch("vertex_z", &vtx_z);
+   tree->Branch("vertex_ex", &vtx_ex);
+   tree->Branch("vertex_ey", &vtx_ey);
+   tree->Branch("vertex_ez", &vtx_ez);
    
+
    tree->Branch("MET_pt",  &MET_pt);
    tree->Branch("MET_phi", &MET_phi);
 
@@ -87,6 +95,9 @@ void ScoutingNtuplizer::analyze(const edm::Event& iEvent, const edm::EventSetup&
     if (getCollectionsResult)
 	return;
     
+    if (muons->size() < 2)
+      return;
+    
 	ResetVariables();
 	
     rho = *handle_rho;
@@ -109,6 +120,7 @@ void ScoutingNtuplizer::analyze(const edm::Event& iEvent, const edm::EventSetup&
 
     //Muons
     for (auto &m: *muons) {
+	   muon_q.push_back(m.charge());
        muon_pt.push_back(m.pt());
        muon_eta.push_back(m.eta()); 
        muon_phi.push_back(m.phi()); 
@@ -123,6 +135,15 @@ void ScoutingNtuplizer::analyze(const edm::Event& iEvent, const edm::EventSetup&
     //Vertices
     vertex_num = vertices->size();
     
+    for (auto &v: *vertices) {
+		vtx_x.push_back(v.x());
+		vtx_y.push_back(v.y());
+		vtx_z.push_back(v.z());
+		vtx_ex.push_back(v.xError());
+		vtx_ey.push_back(v.yError());
+		vtx_ez.push_back(v.zError());
+	}
+    i +=1;
     tree->Fill();
 }
 
@@ -217,6 +238,7 @@ void ScoutingNtuplizer::ResetVariables() {
     
     // Reset Muons
     muon_num = 0;
+    muon_q.clear();
     muon_pt.clear();
     muon_eta.clear();
     muon_phi.clear();
@@ -227,6 +249,13 @@ void ScoutingNtuplizer::ResetVariables() {
     
     // Reset Vertices
     vertex_num = 0;
+    vtx_x.clear();
+    vtx_y.clear();
+    vtx_z.clear();
+    
+    vtx_ex.clear();
+    vtx_ey.clear();
+    vtx_ez.clear();
 
 	
 }
