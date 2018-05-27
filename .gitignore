@@ -13,3 +13,6 @@ __init__.py
 *.jpg
 *.gif
 
+*.tgz
+
+Scouting/crab/jobs
