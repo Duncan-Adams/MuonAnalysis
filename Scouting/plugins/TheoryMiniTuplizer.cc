@@ -136,40 +136,6 @@ void TheoryMiniTuplizer::analyze(const edm::Event& iEvent, const edm::EventSetup
     
 //~    double rho = *handle_rho;
 
-    //~ for (auto &jet: *jets) {
-		
-		//~ double jet_e = jet.photonEnergy() + jet.chargedHadronEnergy() + jet.neutralHadronEnergy() + jet.electronEnergy() + jet.muonEnergy();
-
-		//~ double NHF = jet.neutralHadronEnergy()/jet_e;
-		//~ double NEMF = jet.photonEnergy()/jet_e;
-		//~ double CHF = jet.chargedHadronEnergy()/jet_e;
-		//~ double CEMF = jet.electronEnergy()/jet_e;
-		//~ int CM = jet.chargedHadronMultiplicity() + jet.electronMultiplicity() + jet.muonMultiplicity();
-		//~ int NM = jet.neutralHadronMultiplicity() + jet.photonMultiplicity();
-		//~ int NC = CM + NM;
-
-		//~ bool looseJetID = false;
-
-		//~ if (fabs(jet.eta()) <= 2.7) {
-			//~ looseJetID = (NHF<0.99 && NEMF<0.99 && NC>1) && ((abs(jet.eta())<=2.4 && CHF>0 && CM>0 && CEMF<0.99) || fabs(jet.eta())>2.4);
-		//~ }
-		//~ else if (fabs(jet.eta()) > 2.7 && fabs(jet.eta()) <= 3.0) {
-			//~ looseJetID = (NHF<0.98 && NEMF>0.01 && NM>2);
-		//~ }
-
-		//~ if (!looseJetID) continue; //throwing away bad jets
-	
-        //~ double type = m_theoryID_jet;
-        //~ double btag = 0.0;
-		//~ double dumb = 0.0;
-
-        //~ TLorentzVector tmp_vector;
-        //~ tmp_vector.SetPtEtaPhiM(jet.pt(), jet.eta(), jet.phi(), jet.m());
-
-        //~ addObject(tmp_vector, type, btag, jet.csv(), dumb, dumb, dumb, dumb, dumb, dumb, dumb);
-        //~ Ht += jet.pt();
-    //~ }
-
     for (auto &jet: *jets) {
         double type = m_theoryID_jet;
         double btag = 0.0;

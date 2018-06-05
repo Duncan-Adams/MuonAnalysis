@@ -42,7 +42,7 @@ if __name__ == '__main__':
     config.Data.publication = False
     config.Data.ignoreLocality = False
     
-    config.Data.outLFNDirBase = "/store/user/duadams/crab_dump" # if you are not duncan, change this to an area you can write to
+    config.Data.outLFNDirBase = "/store/user/duadams/muon_data" # if you are not duncan, change this to an area you can write to
     config.Site.storageSite = 'T3_US_Rutgers'
 
 

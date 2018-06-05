@@ -16,3 +16,4 @@ __init__.py
 *.tgz
 
 Scouting/crab/jobs
+jobs/
