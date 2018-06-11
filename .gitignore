@@ -17,3 +17,6 @@ __init__.py
 
 Scouting/crab/jobs
 jobs/
+condor/
+Scouting/condor
+

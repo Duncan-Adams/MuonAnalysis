@@ -6,6 +6,13 @@ import ROOT
 ROOT.gROOT.SetBatch(True)
 sys.argv = oldargv
 
+import argparse
+parser = argparse.ArgumentParser()
+parser.add_argument("inFile", help="text file containing list of ntuples")
+parser.add_argument("outFile", help="name of ROOT file to write")
+args = parser.parse_args()
+
+
 from ROOT import TH1F, TH2F, TFile, TLorentzVector, TChain
 
 # load FWLite C++ libraries
@@ -18,21 +25,25 @@ from DataFormats.FWLite import Handle, Events
 
 
 data_chain = TChain('scoutingntuplizer')
-data_list = open('data_1file.txt', 'r')
-#data_list = open('ntuples.txt', 'r')
+data_list = open(args.inFile, 'r')
 data_files = data_list.readlines()
 for i in data_files:
     data_chain.Add(i.strip())
 
 
+#disable branches we don't want
+data_chain.SetBranchStatus("*", 0)
+data_chain.SetBranchStatus("muon_pt", 1)
+data_chain.SetBranchStatus("muon_eta", 1)
+data_chain.SetBranchStatus("muon_phi", 1)
+
 #book histos
 
-outfile = TFile("histos_ntuple_1file.root", "recreate")
+outfile = TFile(args.outFile, "recreate")
 
 mu_pt = TH1F("pt", "pt", 100, 0, 20)
 mu_eta = TH1F("eta", "eta", 100, -2, 2)
 mu_phi = TH1F("phi", "phi", 90, -3.14, 3.14)
-mu_q = TH1F("q", "charge", 10, -2, 2)
 mumuM = TH1F("mumuM", "Mass", 1200, 0, 120)
 mumuMlow = TH1F("mumuMlow", "Mass", 250, 0, 25)
 mumuMverylow = TH1F("mumuMverylow", "Mass", 1000, 0, 5.0)
@@ -127,7 +138,6 @@ outfile.cd()
 mu_pt.Write()
 mu_eta.Write()
 mu_phi.Write()
-mu_q.Write()
 mumuM.Write()
 mumuMlow.Write()
 mumuMverylow.Write()
