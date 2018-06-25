@@ -51,12 +51,29 @@ ScoutingNtuplizer::ScoutingNtuplizer(const edm::ParameterSet& iConfig):
    tree->Branch("jet_pt",  &jet_pt);
    tree->Branch("jet_eta", &jet_eta);
    tree->Branch("jet_phi", &jet_phi);
-    
+   tree->Branch("jet_m", &jet_m);
+      
+   tree->Branch("jet_Area", &jet_Area);
+   tree->Branch("jet_maxEInEmTowers", &jet_maxEInEmTowers);
+   tree->Branch("jet_maxEInHadTowers", &jet_maxEInHadTowers);
+   tree->Branch("jet_hadEnergyInHB", &jet_hadEnergyInHB);
+   tree->Branch("jet_hadEnergyInHE", &jet_hadEnergyInHE);
+   tree->Branch("jet_hadEnergyInHF", &jet_hadEnergyInHF);
+   tree->Branch("jet_emEnergyInEB", &jet_emEnergyInEB);
+   tree->Branch("jet_emEnergyInEE", &jet_emEnergyInEE);
+   tree->Branch("jet_emEnergyInHF", &jet_emEnergyInHF);
+   tree->Branch("jet_towersArea", &jet_towersArea);
+   tree->Branch("jet_mvaDiscriminator", &jet_mvaDiscriminator);
+   tree->Branch("jet_btagDiscriminator", &jet_btagDiscriminator);
+
+   
    tree->Branch("muon_num", &muon_num, "muon_num/I");
    tree->Branch("muon_q", &muon_q);
    tree->Branch("muon_pt",  &muon_pt);
    tree->Branch("muon_eta", &muon_eta);
    tree->Branch("muon_phi", &muon_phi);
+   tree->Branch("isGlobalMuon", &muon_isGlobalMuon);
+   tree->Branch("isTrackerMuon", &muon_isTrackerMuon);
    
    tree->Branch("vertex_num", &vertex_num, "vertex_num/I");
    tree->Branch("vertex_x", &vtx_x);
@@ -113,6 +130,20 @@ void ScoutingNtuplizer::analyze(const edm::Event& iEvent, const edm::EventSetup&
 		jet_phi.push_back(j.phi());
 		jet_m.push_back(j.m());
 		
+		jet_Area.push_back(j.jetArea());
+		jet_maxEInEmTowers.push_back(j.maxEInEmTowers());
+		jet_maxEInHadTowers.push_back(j.maxEInHadTowers());
+		jet_hadEnergyInHB.push_back(j.hadEnergyInHB());
+		jet_hadEnergyInHE.push_back(j.hadEnergyInHE());
+		jet_hadEnergyInHF.push_back(j.hadEnergyInHF());
+		jet_emEnergyInEB.push_back(j.emEnergyInEB());
+		jet_emEnergyInEE.push_back(j.emEnergyInEE());
+		jet_emEnergyInHF.push_back(j.emEnergyInHF());
+		jet_towersArea.push_back(j.towersArea());
+		jet_mvaDiscriminator.push_back(j.mvaDiscriminator());
+		jet_btagDiscriminator.push_back(j.btagDiscriminator());
+
+		
 		HT += j.pt();
 		jet_num += 1;
 	}
@@ -124,6 +155,8 @@ void ScoutingNtuplizer::analyze(const edm::Event& iEvent, const edm::EventSetup&
        muon_pt.push_back(m.pt());
        muon_eta.push_back(m.eta()); 
        muon_phi.push_back(m.phi()); 
+       muon_isGlobalMuon.push_back(m.isGlobalMuon());
+       muon_isTrackerMuon.push_back(m.isTrackerMuon());
 	}
 
     muon_num = muons->size();
@@ -143,7 +176,7 @@ void ScoutingNtuplizer::analyze(const edm::Event& iEvent, const edm::EventSetup&
 		vtx_ey.push_back(v.yError());
 		vtx_ez.push_back(v.zError());
 	}
-    i +=1;
+
     tree->Fill();
 }
 
@@ -234,6 +267,19 @@ void ScoutingNtuplizer::ResetVariables() {
     jet_phi.clear();
     jet_m.clear();
     
+    jet_Area.clear();
+    jet_maxEInEmTowers.clear();
+    jet_maxEInHadTowers.clear();
+    jet_hadEnergyInHB.clear();
+    jet_hadEnergyInHE.clear();
+    jet_hadEnergyInHF.clear();
+    jet_emEnergyInEB.clear();
+    jet_emEnergyInEE.clear();
+    jet_emEnergyInHF.clear();
+    jet_towersArea.clear();
+    jet_mvaDiscriminator.clear();
+    jet_btagDiscriminator.clear(); 
+    
     HT = 0;
     
     // Reset Muons
@@ -242,6 +288,8 @@ void ScoutingNtuplizer::ResetVariables() {
     muon_pt.clear();
     muon_eta.clear();
     muon_phi.clear();
+    muon_isGlobalMuon.clear();
+    muon_isTrackerMuon.clear();
     
     // Reset MET
     MET_phi = 0;

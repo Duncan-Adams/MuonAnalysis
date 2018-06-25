@@ -42,8 +42,9 @@ class ScoutingNtuplizer : public edm::EDAnalyzer {
 
     // ----------member data ---------------------------
       
-      edm::EDGetTokenT<ScoutingCaloJetCollection> token_jets;
       
+      // Jets
+      edm::EDGetTokenT<ScoutingCaloJetCollection> token_jets;
       edm::Handle<ScoutingCaloJetCollection> jets;
 
       int jet_num;
@@ -52,10 +53,23 @@ class ScoutingNtuplizer : public edm::EDAnalyzer {
       std::vector<float> jet_phi;
       std::vector<float> jet_m;
       
+      std::vector<float> jet_Area;
+	  std::vector<float> jet_maxEInEmTowers;
+	  std::vector<float> jet_maxEInHadTowers;
+	  std::vector<float> jet_hadEnergyInHB;
+	  std::vector<float> jet_hadEnergyInHE;
+	  std::vector<float> jet_hadEnergyInHF;
+	  std::vector<float> jet_emEnergyInEB;
+	  std::vector<float> jet_emEnergyInEE;
+	  std::vector<float> jet_emEnergyInHF;
+	  std::vector<float> jet_towersArea;
+	  std::vector<float> jet_mvaDiscriminator;
+	  std::vector<float> jet_btagDiscriminator;      
+     
       double HT;
 
   
-    
+ 
     // Muon Data    
       edm::EDGetTokenT<ScoutingMuonCollection> token_muons;
       edm::Handle<ScoutingMuonCollection> muons;
@@ -65,6 +79,9 @@ class ScoutingNtuplizer : public edm::EDAnalyzer {
       std::vector<float> muon_pt;
       std::vector<float> muon_eta;
       std::vector<float> muon_phi;
+      
+      std::vector<int> muon_isGlobalMuon;
+      std::vector<int> muon_isTrackerMuon;
       
 
 
@@ -102,8 +119,6 @@ class ScoutingNtuplizer : public edm::EDAnalyzer {
       std::string file_name;
       TFile *file;
       TTree *tree;
-      
-      int i = 0;
       
     // TODO trigger information
 };

@@ -37,7 +37,7 @@ if __name__ == '__main__':
 
     config.Data.inputDataset = ''
     config.Data.splitting = 'LumiBased'
-    config.Data.unitsPerJob = 500 
+    config.Data.unitsPerJob = 400
     config.Data.lumiMask = 'https://cms-service-dqm.web.cern.ch/cms-service-dqm/CAF/certification/Collisions17/13TeV/Final/Cert_294927-306462_13TeV_PromptReco_Collisions17_JSON.txt' 
     config.Data.publication = False
     config.Data.ignoreLocality = False
@@ -53,7 +53,7 @@ if __name__ == '__main__':
         name = 'ScoutingCaloMuon_minituples_{0}_{1}'.format(dataset_name, version)
         config.General.requestName = name
         config.Data.outputDatasetTag = name
-        output_name = 'scouting_ntuple.root'
+        output_name = 'scouting_minituple.root'
         config.JobType.pyCfgParams = ['outputFile={0}'.format(output_name)]
         config.JobType.outputFiles = [output_name]
         config.Data.inputDataset = dataset
