@@ -29,10 +29,10 @@ if __name__ == '__main__':
     version = 'v1'
 
     config.General.requestName = ''
-    config.General.workArea = 'jobs'
+    config.General.workArea = 'jobs_4mu'
 
     config.JobType.pluginName = 'Analysis'
-    config.JobType.psetName = '../python/ScoutingNtuplizer_cfg.py'
+    config.JobType.psetName = '../python/ScoutingNtuplizer_4mu_cfg.py'
     config.JobType.allowUndistributedCMSSW = True
 
     config.Data.inputDataset = ''
@@ -42,7 +42,7 @@ if __name__ == '__main__':
     config.Data.publication = False
     config.Data.ignoreLocality = False
     
-    config.Data.outLFNDirBase = "/store/user/duadams/muon_data" # if you are not duncan, change this to an area you can write to
+    config.Data.outLFNDirBase = "/store/user/duadams/muon_data/4mu" # if you are not duncan, change this to an area you can write to
     config.Site.storageSite = 'T3_US_Rutgers'
 
 

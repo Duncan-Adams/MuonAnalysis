@@ -60,11 +60,11 @@ class ScoutingNtuplizer : public edm::EDAnalyzer {
 	  std::vector<float> jet_hadEnergyInHE;
 	  std::vector<float> jet_hadEnergyInHF;
 	  std::vector<float> jet_emEnergyInEB;
-	  std::vector<float> jet_emEnergyInEE;
-	  std::vector<float> jet_emEnergyInHF;
-	  std::vector<float> jet_towersArea;
-	  std::vector<float> jet_mvaDiscriminator;
-	  std::vector<float> jet_btagDiscriminator;      
+       std::vector<float> jet_emEnergyInEE;
+       std::vector<float> jet_emEnergyInHF;
+       std::vector<float> jet_towersArea;
+       std::vector<float> jet_mvaDiscriminator;
+       std::vector<float> jet_btagDiscriminator;      
      
       double HT;
 
@@ -120,5 +120,6 @@ class ScoutingNtuplizer : public edm::EDAnalyzer {
       TFile *file;
       TTree *tree;
       
+     int min_muons;
     // TODO trigger information
 };

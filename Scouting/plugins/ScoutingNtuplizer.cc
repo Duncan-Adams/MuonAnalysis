@@ -23,18 +23,14 @@ using namespace edm;
 // constructors and destructor //
 //*****************************//
 ScoutingNtuplizer::ScoutingNtuplizer(const edm::ParameterSet& iConfig):
-    token_jets(consumes<ScoutingCaloJetCollection>(
-                   iConfig.getParameter<InputTag>("jet_collection"))),
-    token_muons(consumes<ScoutingMuonCollection>(
-                    iConfig.getParameter<InputTag>("muon_collection"))),
-    token_rho(consumes<double>(
-                  iConfig.getParameter<InputTag>("rho"))),
+    token_jets(consumes<ScoutingCaloJetCollection>(iConfig.getParameter<InputTag>("jet_collection"))),
+    token_muons(consumes<ScoutingMuonCollection>(iConfig.getParameter<InputTag>("muon_collection"))),
+    token_rho(consumes<double>(iConfig.getParameter<InputTag>("rho"))),
     token_MET_pt(consumes<double>(iConfig.getParameter<InputTag>("MET_pt"))),
     token_MET_phi(consumes<double>(iConfig.getParameter<InputTag>("MET_phi"))),
-    token_vertices(consumes<ScoutingVertexCollection>(
-                       iConfig.getParameter<InputTag>("vertex_collection"))),
-    file_name(iConfig.getParameter<string>("output_file_name"))
-
+    token_vertices(consumes<ScoutingVertexCollection>(iConfig.getParameter<InputTag>("vertex_collection"))),
+    file_name(iConfig.getParameter<string>("output_file_name")),
+    min_muons(iConfig.getParameter<int>("mu_min"))
 {
    //now do what ever initialization is needed
    file = new TFile(file_name.c_str(), "RECREATE");
@@ -112,7 +108,7 @@ void ScoutingNtuplizer::analyze(const edm::Event& iEvent, const edm::EventSetup&
     if (getCollectionsResult)
 	return;
     
-    if (muons->size() < 2)
+    if (muons->size() < (unsigned int)min_muons)
       return;
     
 	ResetVariables();

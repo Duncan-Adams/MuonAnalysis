@@ -8,5 +8,6 @@ scoutingntuplizer = cms.EDAnalyzer(
    vertex_collection   = cms.InputTag('hltScoutingMuonPackerCalo:displacedVtx'),
    MET_pt              = cms.InputTag('hltScoutingCaloPacker:caloMetPt'),
    MET_phi             = cms.InputTag('hltScoutingCaloPacker:caloMetPhi'),
-   output_file_name    = cms.string('scouting_ntuple.root')
+   output_file_name    = cms.string('scouting_ntuple.root'),
+   mu_min              = cms.int32(2)
 )
